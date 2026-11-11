@@ -1,0 +1,426 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b141c"><meta name="application-name" content="BikingMan Performance"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><title>BikingMan Performance</title>
+<style>
+:root{color-scheme:dark;--bg:#0b141c;--card:#14232d;--line:#29404c;--text:#eaf5f5;--muted:#9cb1bb;--accent:#50e0b0}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,sans-serif}header{padding:23px 20px 15px;background:#10202a;position:sticky;top:0;z-index:2;border-bottom:1px solid var(--line)}header small{color:var(--accent);letter-spacing:2px;font-weight:700}h1{font-size:24px;margin:5px 0}main{max-width:760px;margin:auto;padding:18px 16px 110px}nav{position:fixed;bottom:0;left:0;right:0;background:#10202a;display:flex;justify-content:space-around;border-top:1px solid var(--line);z-index:3;padding-bottom:env(safe-area-inset-bottom)}nav button{background:none;border:0;color:var(--muted);padding:13px 6px;font-size:12px;flex:1}nav button.active{color:var(--accent);font-weight:700}section{display:none}section.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin:0 0 14px}h2{font-size:20px;margin:5px 0 14px}h3{margin:0 0 10px;font-size:16px}.muted,small{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stat{font-size:29px;font-weight:800;color:var(--accent)}label{display:block;margin:12px 0 5px;color:#c7d7dc}input,select,textarea{width:100%;padding:12px;background:#0b1820;border:1px solid #36505b;color:var(--text);border-radius:10px;font:inherit}textarea{min-height:75px}button.action,.filelabel{display:inline-block;background:var(--accent);color:#092019;border:0;border-radius:11px;padding:12px 16px;font-weight:800;margin-top:12px;cursor:pointer}.secondary{background:#263e49!important;color:var(--text)!important}.danger{background:#4b2930!important;color:#ffe4e4!important}.pill{display:inline-block;background:#24443e;color:#7ff0cb;border-radius:20px;padding:5px 10px;font-size:12px}.entry{padding:11px 0;border-bottom:1px solid var(--line)}.entry:last-child{border:0}.progress{height:9px;background:#2d404a;border-radius:20px;overflow:hidden}.progress span{display:block;background:var(--accent);height:100%}ul{padding-left:19px;line-height:1.65}.hidden{display:none!important} .row{display:flex;justify-content:space-between;gap:10px;align-items:center} .row button{margin:0} .notice{border-left:3px solid var(--accent);padding:9px 12px;background:#102e2c;border-radius:7px;line-height:1.5}a{color:var(--accent)}
+</style><style>@media(min-width:900px){body{padding-left:230px}header{position:sticky;top:0;padding:28px 35px}main{max-width:1150px;padding:32px 30px 90px}nav{top:0;bottom:0;right:auto;width:230px;flex-direction:column;justify-content:flex-start;padding:35px 10px;gap:10px;border-right:1px solid var(--line);border-top:0}nav button{text-align:left;flex:0;font-size:15px;padding:17px;border-radius:12px}nav button br{display:none}nav button.active{background:#203d3c}section.active{columns:2;column-gap:18px}section.active .card{break-inside:avoid;display:inline-block;width:100%;vertical-align:top}#coach.active .card{display:block}#coach.active{columns:2}}@media(min-width:1100px){#home.active{columns:2}}@media(max-width:390px){nav button{font-size:10px}}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}</style></head><body>
+<header><small>ULTRA CYCLING • 2028</small><h1>BikingMan Performance V7.8.2</h1><div class="muted">Ton centre de pilotage personnel · PC & Android</div></header>
+<main>
+<section id="home" class="active"><div class="card"><span class="pill">Objectif • BikingMan AURA 2028</span><h2 style="margin-top:14px">Cap sur les 1 000 km</h2><div class="grid"><div><div class="stat">1 000</div><small>km visés</small></div><div><div class="stat">18 000</div><small>m de D+ visés</small></div><div><div class="stat" id="ftpHome">196 W</div><small>FTP de référence</small></div><div><div class="stat" id="sessionsHome">0</div><small>séances enregistrées</small></div></div></div>
+<div class="card"><h3>Tableau de bord · 7 derniers jours</h3><div class="grid"><div><div class="stat" id="dashHours">0 h</div><small>Entraînement</small></div><div><div class="stat" id="dashLoad">0</div><small>Charge sRPE (min × ressenti)</small></div><div><div class="stat" id="dashCount">0</div><small>Séances</small></div><div><div class="stat" id="dashRecovery">—</div><small>Énergie du dernier bilan</small></div></div><p id="dashNote" class="muted"></p></div><div class="card"><h3>Volume hebdomadaire · 8 semaines</h3><div id="weeklyBars" role="img" aria-label="Graphique des heures d'entraînement par semaine"></div><small>Les semaines sont calculées du lundi au dimanche à partir des séances saisies.</small></div><div class="card"><h3>Historique FTP</h3><div id="ftpHistory"></div><small>La valeur de référence n'est pas une FTP mesurée automatiquement. Enregistre une nouvelle FTP après un test.</small></div><div class="card"><h3>État de forme du jour</h3><label>Énergie ressentie (1 = épuisé, 5 = excellent)</label><select id="energy"><option value="3">3 — Moyenne</option><option value="1">1 — Très faible</option><option value="2">2 — Faible</option><option value="4">4 — Bonne</option><option value="5">5 — Excellente</option></select><label>Sommeil (heures)</label><input id="sleep" type="number" min="0" max="16" step=".5" value="7"><label>Douleur ou gêne inhabituelle ?</label><select id="pain"><option value="no">Non</option><option value="yes">Oui</option></select><button class="action" onclick="saveForm()">Enregistrer ma forme</button><p id="formAdvice" class="notice"></p></div>
+<div class="card"><h3>Priorités de préparation</h3><ul><li>Développer endurance et FTP progressivement</li><li>Travailler la force en côte et la tolérance aux longues durées</li><li>Surveiller confort, asymétrie et récupération</li><li>Tester nutrition et hydratation avant la course</li></ul></div></section>
+<section id="coach">
+<div class="card"><h2>Programme adaptatif · 4 semaines</h2><p class="muted">Plan indicatif sur quatre semaines. Les nouvelles activités Garmin du jour peuvent alléger automatiquement les 48 heures suivantes. Les activités anciennes ne modifient pas le calendrier. La suspension reste prioritaire.</p>
+<label>Volume hebdomadaire de départ (heures)</label><input id="planHours" type="number" min="2" max="16" step="0.5" value="5">
+<label>Début du cycle</label><input id="planStart" type="date">
+<button class="action" onclick="createPlan()">Créer / actualiser le programme</button>
+<div class="card" style="margin-top:12px"><h3>Suspension et reprise du programme</h3><p class="muted">Suspendre le cycle en cas de maladie ou de fatigue. Les séances non réalisées ne sont pas comptées comme un retard. Le programme reprend uniquement après ta confirmation.</p><div class="row"><button class="action" onclick="pausePlan()">Suspendre le programme</button><button class="action secondary" onclick="resumePlan()">Préparer la reprise</button></div><label for="resumeDate">Date souhaitée de reprise</label><input id="resumeDate" type="date"><div id="planPauseStatus" class="notice">Programme actif ou non créé.</div></div><div id="autoAdaptStatus" class="notice" style="margin-top:12px">Adaptation automatique : en attente d’une activité.</div><div class="card" style="margin-top:12px"><h3>Laboratoire de simulation · sans modification des données</h3><p class="muted">Teste l'effet d'une séance fictive sur une copie de ton calendrier. Aucune activité ni adaptation simulée n'est enregistrée.</p><div class="grid"><div><label for="simMinutes">Durée fictive (min)</label><input id="simMinutes" type="number" min="10" max="600" value="120"></div><div><label for="simNP">Puissance normalisée fictive (W)</label><input id="simNP" type="number" min="30" max="500" value="175"></div></div><label for="simPause">État du programme pour le test</label><select id="simPause"><option value="current">Utiliser l'état réel (actuellement suspendu ou actif)</option><option value="paused">Simuler un programme suspendu</option><option value="active">Simuler un programme actif (sans le réactiver)</option></select><button class="action secondary" onclick="simulatePlan()">Tester sur une copie</button><div id="simResult" class="notice" style="margin-top:12px">Aucune simulation lancée.</div></div><div id="planMessage" class="notice" style="margin-top:12px">Aucun programme créé.</div><div id="planView" aria-live="polite"></div>
+<small>Le programme est un brouillon modifiable. Les puissances sont indicatives selon la FTP. Ne reprends pas les efforts tant que la convalescence ou les symptômes persistent.</small></div>
+<div class="card"><h2>Coach adaptatif</h2><p class="muted">Recommandation indicative fondée sur ta forme déclarée et tes séances enregistrées. Elle ne remplace pas un entraîneur ou un avis médical.</p>
+<label>Énergie (1–5)</label><select id="coachEnergy"><option value="1">1 — Épuisé</option><option value="2">2 — Faible</option><option value="3" selected>3 — Moyenne</option><option value="4">4 — Bonne</option><option value="5">5 — Excellente</option></select>
+<label>Sommeil (heures)</label><input id="coachSleep" type="number" min="0" max="16" step=".5" value="7">
+<label>Jambes</label><select id="coachLegs"><option value="fresh">Fraîches</option><option value="tired">Fatiguées</option><option value="pain">Douleur inhabituelle</option></select>
+<label>État de santé</label><select id="coachHealth"><option value="well">En bonne santé</option><option value="recovering">Convalescence / symptômes résiduels</option><option value="ill">Malade / fièvre</option></select>
+<label>Objectif</label><select id="coachGoal"><option value="endurance">Endurance</option><option value="force">Force en côte</option><option value="tempo">Tempo</option><option value="recovery">Récupération</option></select>
+<button class="action" onclick="recommend()">Proposer ma séance</button>
+<button class="action secondary" onclick="saveCoachCheckin()">Enregistrer mon bilan du jour</button>
+<div id="checkinStatus" class="muted" style="margin-top:8px"></div><div id="coachResult" class="notice" style="margin-top:15px">Renseigne ton état de forme pour obtenir une séance.</div></div>
+<div class="card"><h3>Historique de récupération</h3><div id="checkinHistory" class="muted">Aucun bilan enregistré.</div></div>
+<div class="card"><h3>Créateur de séances MyWhoosh</h3><p class="muted">Crée une séance structurée puis exporte-la en ZWO pour l'importer dans MyWhoosh Workout Builder.</p>
+<label>Nom de séance</label><input id="workoutName" value="Endurance BikingMan">
+<label>Échauffement (minutes)</label><input id="warmup" type="number" min="0" max="60" value="10">
+<label>Nombre de répétitions</label><input id="repeats" type="number" min="1" max="30" value="3">
+<div class="grid"><div><label>Effort (minutes)</label><input id="workMin" type="number" min="1" max="240" value="10"></div><div><label>Effort (watts)</label><input id="workW" type="number" min="30" max="600" value="130"></div><div><label>Récupération (minutes)</label><input id="restMin" type="number" min="0" max="120" value="5"></div><div><label>Récupération (watts)</label><input id="restW" type="number" min="30" max="600" value="95"></div></div>
+<label>Retour au calme (minutes)</label><input id="cooldown" type="number" min="0" max="60" value="10">
+<label>Cadence cible (tr/min, optionnelle)</label><input id="cadence" type="number" min="40" max="130" placeholder="Ex. 90">
+<button class="action" onclick="exportZwo()">Exporter le fichier .ZWO</button>
+<p class="muted" id="workoutSummary"></p><small>Les watts sont convertis en fractions de ta FTP. Vérifie que la FTP dans MyWhoosh est identique.</small></div>
+</section><section id="training"><div class="card"><h2>Journal d'entraînement</h2><label>Date</label><input type="date" id="date"><label>Activité</label><select id="type"><option>Séance home trainer</option><option>Vélo extérieur</option><option>Course à pied</option><option>Renforcement</option><option>Mobilité</option></select><div class="grid"><div><label>Durée (min)</label><input id="duration" type="number" min="1" value="60"></div><div><label>Puissance moy. (W)</label><input id="watts" type="number" min="0" placeholder="Facultatif"></div></div><label>Ressenti (RPE, 1–10)</label><input id="rpe" type="number" min="1" max="10" value="4"><label>Mode de séance</label><select id="sessionMode"><option value="">Non renseigné</option><option value="simulation">Simulation de pente</option><option value="erg">ERG</option><option value="libre">Libre</option></select><label>Commentaires / sensations</label><textarea id="notes" placeholder="Jambe droite, selle, Realplate, alimentation…"></textarea><button class="action" onclick="addSession()">Ajouter la séance</button></div><div class="card"><h3>Historique et intervalles</h3><p class="muted">Ouvre « Détails » pour examiner les efforts détectés. Les séances déjà importées peuvent être analysées à partir des intervalles conservés ; les futurs imports enregistreront aussi une courbe plus détaillée.</p><div id="sessionList"></div></div><div class="card"><h3>Repères de puissance</h3><label>FTP actuelle (W)</label><input id="ftp" type="number" min="50" max="600" value="196"><button class="action" onclick="saveFTP()">Mettre à jour</button><div id="zones" style="margin-top:14px"></div><small>Zones indicatives sur la base du modèle classique à 7 zones ; à adapter à tes tests et sensations.</small></div><div class="card"><h3>Données de séance complémentaires (facultatif)</h3><p class="muted">Renseigne ces champs lors de la saisie d'une séance pour suivre le dénivelé et la distance.</p><label>Distance (km)</label><input id="distance" type="number" min="0" step=".1" placeholder="Ex. 42,5"><label>Dénivelé positif (m)</label><input id="elevation" type="number" min="0" step="1" placeholder="Ex. 850"></div><div class="card"><h3>Importer une activité Garmin Connect</h3><p class="muted">Accepte un fichier FIT ou une archive ZIP contenant un FIT, exportés depuis Garmin Connect. Traitement local dans le navigateur : aucune donnée n’est envoyée à un serveur. Une activité importée est détectée par son identifiant FIT pour éviter les doublons.</p><label>Fichier FIT ou ZIP Garmin</label><input type="file" id="fitInput" accept=".fit,.zip,application/zip"/><button class="action" onclick="importGarminFit()">Analyser le fichier</button><div id="fitResult" class="notice" style="margin-top:12px">Aucun fichier analysé.</div><small>Le mode de séance se renseigne après import dans l’historique ; il ne peut pas être déduit de la seule cadence. Les intervalles sont calculés à partir des enregistrements de puissance et cadence, par blocs de 30 secondes. Durée, distance, D+, puissance, fréquence cardiaque et cadence sont récupérés lorsqu’ils figurent dans le fichier. RPE par défaut : 4, à ajuster ensuite selon ton ressenti. La puissance normalisée est conservée séparément.</small></div></section>
+<section id="nutrition"><div class="card"><h2>Assistant nutrition</h2><label>Durée prévue (heures)</label><input id="hours" type="number" min=".25" max="48" step=".25" value="2"><label>Intensité</label><select id="intensity"><option value="easy">Facile / endurance</option><option value="hard">Soutenue / intense</option></select><label>Température / conditions</label><select id="heat"><option value="normal">Tempérées</option><option value="hot">Chaudes</option><option value="cold">Froides</option></select><label>Appétit</label><select id="appetite"><option value="normal">Normal</option><option value="low">Faible / écœurement du sucré</option></select><button class="action" onclick="nutrition()">Calculer mes repères</button><div id="nutritionResult" class="notice" style="margin-top:15px"></div></div><div class="card"><h3>Aliments pratiques pour toi</h3><ul><li>Mini-gâteaux salés de semoule</li><li>Petits sandwichs jambon ou fromage</li><li>Pommes de terre salées et petites portions faciles à manger</li><li>Eau et électrolytes ; boisson glucidique seulement si bien tolérée</li></ul><small>Les valeurs sont des repères généraux à tester à l'entraînement, pas des prescriptions médicales.</small></div></section>
+<section id="gear"><div class="card"><h2>Mon équipement</h2><p class="muted">Poids de base du Cervélo : 8 400 g (référence octobre 2026, avec accessoires indiqués, bidons vides).</p><div class="grid"><div><div class="stat" id="totalWeight">8,40</div><small>kg enregistrés</small></div><div><div class="stat">12,5</div><small>kg plafond visé</small></div></div><div class="progress"><span id="weightProgress"></span></div><p id="weightLeft" class="muted"></p></div><div class="card"><h3>Ajouter du matériel</h3><label>Nom</label><input id="itemName" placeholder="Ex. Cyclite Saddle Bag"><label>Poids (g)</label><input id="itemWeight" type="number" min="0" step="1"><label>Catégorie</label><select id="itemCategory"><option>Bagagerie</option><option>Vêtements</option><option>Électronique</option><option>Réparation</option><option>Sommeil</option><option>Hydratation</option><option>Autre</option></select><button class="action" onclick="addGear()">Ajouter</button></div><div class="card"><h3>Inventaire</h3><div id="gearList"></div><small>Le poids est calculé à partir des articles ajoutés. Vérifie les éléments déjà inclus dans les 8,4 kg pour éviter les doubles comptes.</small></div></section>
+<section id="settings"><div class="card"><h3>PC ↔ Samsung</h3><p>Cette version utilise les mêmes fonctionnalités sur PC et Android. La synchronisation automatique n’est <strong>pas encore activée</strong> : aucun serveur ni compte en ligne n’est configuré.</p><p>Pour transférer tes données : exporte une sauvegarde JSON depuis le premier appareil, envoie-la à l’autre, puis restaure-la. Attention : la restauration remplace les données locales.</p><p class="muted">Une vraie synchronisation sécurisée nécessitera un hébergement, une authentification et un stockage en ligne.</p></div><div class="card"><h2>Données et sauvegarde</h2><p>Les données sont stockées localement dans ce navigateur sur cet appareil. Une suppression des données du navigateur peut les effacer : exporte régulièrement une sauvegarde.</p><button class="action" onclick="exportData()">Exporter ma sauvegarde JSON</button><label class="filelabel secondary" for="importFile">Restaurer une sauvegarde JSON</label><input id="importFile" class="hidden" type="file" accept=".json,application/json" onchange="previewImport(event)"><div id="backupPreview" class="notice" style="margin-top:12px" aria-live="polite">Sélectionne une sauvegarde pour en consulter le contenu avant restauration.</div><button id="backupConfirm" class="action danger hidden" onclick="confirmImport()">Confirmer la restauration</button><button id="backupCancel" class="action secondary hidden" onclick="cancelImport()">Annuler</button><p class="muted">La restauration remplace les données actuelles uniquement après ta confirmation. Garde toujours une copie de ta sauvegarde précédente.</p></div><div class="card"><h3>Version 7.8.1 : état des connexions</h3>
+<p><strong>Garmin :</strong> import FIT/ZIP disponible ; synchronisation directe non active.</p>
+<p><strong>Synchronisation PC / Android :</strong> pas encore active. Utilise Exporter / Restaurer pour transférer tes données.</p>
+<p><strong>MyWhoosh :</strong> export ZWO disponible, import à réaliser dans MyWhoosh Workout Builder.</p></div><div class="card"><h3>À venir</h3><ul><li>Calendrier d'entraînement structuré jusqu'en 2028</li><li>Synchronisation Garmin Connect autorisée (non active)</li><li>Suivi de l'équilibre gauche/droite</li><li>Planification de course et stratégie de sommeil</li><li>Synchronisation multi-appareils avec compte sécurisé</li></ul></div><div class="card"><h3>Installer sur Android</h3><p>Après hébergement sur une adresse HTTPS, ouvre le site dans Chrome, puis utilise « Installer l'application » ou « Ajouter à l'écran d'accueil » dans le menu. Un fichier HTML ouvert directement n'est pas une PWA installable.</p></div></section>
+</main><nav><button data-page="home" class="active">⌂<br>Accueil</button><button data-page="coach">✦<br>Coach</button><button data-page="training">▥<br>Séances</button><button data-page="nutrition">◉<br>Nutrition</button><button data-page="gear">⚙<br>Matériel</button><button data-page="settings">☰<br>Réglages</button></nav>
+<script>
+const KEY='bikingman-v1';let data={ftp:196,sessions:[],gear:[{name:'Cervélo Caledonia-5 — base',weight:8400,category:'Vélo'}],form:{energy:3,sleep:7,pain:'no',date:''}};
+try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&Array.isArray(saved.sessions)&&Array.isArray(saved.gear))data={...data,...saved}}catch(e){}
+// Correct earlier FIT distance decoding (raw FIT distance is centimetres).
+// Only correct Garmin-imported sessions with impossible average speed.
+for(const session of data.sessions){if(session.source==='Garmin FIT'&&Number(session.distance)>0&&Number(session.duration)>0&&session.distance/(session.duration/60)>150&&!session.fitDistanceCorrected){session.distance=Math.round(session.distance)/100;session.fitDistanceCorrected=true}}
+// Migration ciblée : activité MyWhoosh du 31/10/2026 identifiée par l'utilisateur.
+for(const session of data.sessions){if(session.source==='Garmin FIT'&&session.date==='2026-10-31'&&session.type==='Vélo extérieur')session.type='Séance home trainer';}
+if(!Array.isArray(data.plan))data.plan=[];if(!data.planControl||typeof data.planControl!=='object')data.planControl={paused:false,history:[]};if(!Array.isArray(data.checkins))data.checkins=[];if(!Array.isArray(data.ftpHistory))data.ftpHistory=[{date:new Date().toLocaleDateString('en-CA'),ftp:data.ftp}];const $=id=>document.getElementById(id);const save=()=>{localStorage.setItem(KEY,JSON.stringify(data));render()};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,section').forEach(e=>e.classList.remove('active'));b.classList.add('active');$(b.dataset.page).classList.add('active');scrollTo(0,0)});
+$('date').value=new Date().toLocaleDateString('en-CA');$('ftp').value=data.ftp;$('energy').value=data.form.energy;$('sleep').value=data.form.sleep;$('pain').value=data.form.pain;
+function advice(){const f=data.form;if(f.pain==='yes')return 'Gêne inhabituelle : évite les séances intenses, adapte ou suspends l’effort selon les symptômes et demande un avis médical si la douleur persiste ou s’aggrave.';if(f.energy<=2||f.sleep<6)return 'Récupération prioritaire : privilégie repos, mobilité douce ou endurance très facile. Évite le travail intense aujourd’hui.';if(f.energy>=4&&f.sleep>=7)return 'Forme favorable : suis la séance prévue en restant attentif aux sensations et à la charge récente.';return 'Forme intermédiaire : privilégie une intensité maîtrisée et réévalue après l’échauffement.'}
+function saveForm(){data.form={energy:+$('energy').value,sleep:+$('sleep').value,pain:$('pain').value,date:new Date().toLocaleDateString('en-CA')};save()}
+function addSession(){const duration=+$('duration').value,rpe=+$('rpe').value;if(!(duration>0&&duration<10000&&rpe>=1&&rpe<=10)){alert('Vérifie la durée et le ressenti.');return}data.sessions.unshift({id:Date.now(),date:$('date').value,type:$('type').value,duration,watts:$('watts').value?+$('watts').value:null,rpe,notes:$('notes').value,sessionMode:$('sessionMode').value,distance:$('distance').value?+$('distance').value:null,elevation:$('elevation').value?+$('elevation').value:null});$('notes').value='';$('distance').value='';$('elevation').value='';save()}
+function setSessionMode(id,mode){
+ const valid=['','simulation','erg','libre'];if(!valid.includes(mode))return;
+ const item=data.sessions.find(x=>x.id===id);if(!item)return;
+ item.sessionMode=mode;save();
+}
+function sessionModeLabel(mode){return ({simulation:'Simulation de pente',erg:'ERG',libre:'Libre'})[mode]||'Non renseigné'}
+function removeSession(id){if(confirm('Supprimer cette séance ?')){data.sessions=data.sessions.filter(x=>x.id!==id);save()}}
+function saveFTP(){const f=+$('ftp').value;if(f<50||f>600){alert('FTP invalide');return}data.ftp=f;data.ftpHistory.push({date:new Date().toLocaleDateString('en-CA'),ftp:f});save()}
+function addGear(){let name=$('itemName').value.trim(),weight=+$('itemWeight').value;if(!name||!$('itemWeight').value||weight<0||weight>50000){alert('Saisis un nom et un poids valide.');return}data.gear.push({id:Date.now(),name,weight,category:$('itemCategory').value});$('itemName').value='';$('itemWeight').value='';save()}
+function removeGear(id){if(confirm('Supprimer cet article ?')){data.gear=data.gear.filter(x=>x.id!==id);save()}}
+function nutrition(){let h=+$('hours').value;if(!(h>=.25&&h<=48)){alert('Durée invalide');return}let hard=$('intensity').value==='hard',hot=$('heat').value==='hot',low=$('appetite').value==='low';let carbs=h<=1?'0–30':hard?'60–90':'40–70';let fluids=hot?'500–1 000':'400–800';$('nutritionResult').innerHTML=`<strong>Repères par heure</strong><p>Glucides : ${carbs} g/h ; boissons : ${fluids} ml/h, à ajuster selon soif, transpiration et conditions.</p><p>${low?'Privilégie des aliments salés et de petites prises régulières.':'Fractionne les apports en petites prises régulières.'} ${hot?'Surveille particulièrement la chaleur et les pertes de sel.':''}</p><p>Pour ${h} h, prépare tes ravitaillements à l’avance. Sur une longue sortie, entraîne progressivement ta tolérance digestive. Ne force pas une quantité d’eau fixe.</p>`}
+function render(){let total=data.gear.reduce((a,x)=>a+(Number(x.weight)||0),0);$('ftpHome').textContent=data.ftp+' W';$('sessionsHome').textContent=data.sessions.length;$('formAdvice').textContent=advice();$('totalWeight').textContent=(total/1000).toFixed(2).replace('.',',');$('weightProgress').style.width=Math.min(100,total/12500*100)+'%';$('weightLeft').textContent=(12500-total>=0?'Marge restante : '+((12500-total)/1000).toFixed(2)+' kg':'Plafond dépassé de '+((total-12500)/1000).toFixed(2)+' kg');$('sessionList').innerHTML=data.sessions.length?data.sessions.map(s=>`<div class="entry"><div class="row"><strong>${esc(s.date)} · ${esc(s.type)}</strong><button class="action danger" onclick="removeSession(${s.id})">×</button></div>${s.type==='Séance home trainer'?`<label for="mode-${s.id}">Mode de séance</label><select id="mode-${s.id}" onchange="setSessionMode(${s.id},this.value)"><option value="" ${!s.sessionMode?'selected':''}>Non renseigné</option><option value="simulation" ${s.sessionMode==='simulation'?'selected':''}>Simulation de pente</option><option value="erg" ${s.sessionMode==='erg'?'selected':''}>ERG</option><option value="libre" ${s.sessionMode==='libre'?'selected':''}>Libre</option></select>`:''}<div>${s.duration} min · RPE ${s.rpe}${s.watts?' · '+s.watts+' W':''}${s.distance!=null?' · '+s.distance+' km':''}${s.elevation!=null?' · '+s.elevation+' m D+':''}</div><div class="muted">${esc(s.notes||'')}</div>${s.intervals?`<details><summary>Analyse graphique · ${s.intervals.length} intervalles</summary>${intervalHtml(s)}</details>`:''}</div>`).join(''):'Aucune séance pour le moment.';$('gearList').innerHTML=data.gear.map(g=>`<div class="entry row"><div><strong>${esc(g.name)}</strong><div class="muted">${esc(g.category)} · ${g.weight} g</div></div>${g.id?`<button class="action danger" onclick="removeGear(${g.id})">×</button>`:''}</div>`).join('');let f=data.ftp;let zones=[['Z1 Récupération',0,.55],['Z2 Endurance',.56,.75],['Z3 Tempo',.76,.90],['Z4 Seuil',.91,1.05],['Z5 VO₂max',1.06,1.20],['Z6 Anaérobie',1.21,1.50]];$('zones').innerHTML=zones.map(z=>`<div class="entry row"><span>${z[0]}</span><strong>${Math.round(f*z[1])}–${Math.round(f*z[2])} W</strong></div>`).join('')+`<div class="entry">Z7 Neuromusculaire : effort maximal, non défini par un pourcentage FTP.</div>`}
+const APP_VERSION='7.8.1';
+let pendingBackup=null;
+function backupPayload(){return {version:1,appVersion:APP_VERSION,exportedAt:new Date().toISOString(),...data}}
+function backupFilename(){const d=new Date();const stamp=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'_'+String(d.getHours()).padStart(2,'0')+'-'+String(d.getMinutes()).padStart(2,'0')+'-'+String(d.getSeconds()).padStart(2,'0');return 'BikingMan_V'+APP_VERSION.replace('.','-')+'_sauvegarde_'+stamp+'.json'}
+function exportData(){const content=JSON.stringify(backupPayload(),null,2);if(window.AndroidBridge){window.AndroidBridge.exportJson(content);return}const blob=new Blob([content],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=backupFilename();a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function validateBackup(v){if(!v||!Array.isArray(v.sessions)||!Array.isArray(v.gear)||!(Number.isFinite(Number(v.ftp))&&Number(v.ftp)>=50&&Number(v.ftp)<=600))throw Error('Sauvegarde BikingMan non reconnue');if(v.plan!==undefined&&!Array.isArray(v.plan))throw Error('Calendrier invalide');if(v.checkins!==undefined&&!Array.isArray(v.checkins))throw Error('Bilans invalides')}
+function cancelImport(){pendingBackup=null;$('backupConfirm').classList.add('hidden');$('backupCancel').classList.add('hidden');$('importFile').value='';$('backupPreview').textContent='Restauration annulée. Les données actuelles sont inchangées.'}
+async function previewImport(e){const file=e.target.files&&e.target.files[0];if(!file)return;pendingBackup=null;$('backupConfirm').classList.add('hidden');$('backupCancel').classList.add('hidden');$('backupPreview').textContent='Lecture de la sauvegarde…';try{if(file.size>20*1024*1024)throw Error('Fichier trop volumineux (20 Mo maximum)');const v=JSON.parse(await file.text());validateBackup(v);pendingBackup=v;const days=new Set((v.plan||[]).map(p=>p.date)).size;const weeks=new Set((v.plan||[]).map(p=>p.week)).size;const fmtDate=v.exportedAt?new Date(v.exportedAt).toLocaleString('fr-FR'):'Non renseignée (ancienne sauvegarde)';const name=esc(file.name);$('backupPreview').innerHTML='<strong>Vérifie cette sauvegarde avant restauration</strong><p>Fichier : '+name+'<br>Version : '+esc(v.appVersion||'ancienne version')+'<br>Date de sauvegarde : '+esc(fmtDate)+'</p><p>FTP : '+Number(v.ftp)+' W · Activités : '+v.sessions.length+' · Bilans : '+(v.checkins||[]).length+' · Calendrier : '+days+' journées / '+weeks+' semaines · Programme suspendu : '+(v.planControl&&v.planControl.paused?'oui':'non')+'</p><strong>Attention : confirmer remplacera les données actuellement enregistrées sur cet appareil.</strong>';$('backupConfirm').classList.remove('hidden');$('backupCancel').classList.remove('hidden')}catch(err){pendingBackup=null;$('backupPreview').textContent='Impossible de lire cette sauvegarde : '+err.message}}
+function confirmImport(){if(!pendingBackup)return;const v=pendingBackup;try{validateBackup(v);const updated={ftp:Number(v.ftp),sessions:v.sessions,gear:v.gear,form:v.form||data.form,checkins:Array.isArray(v.checkins)?v.checkins:[],ftpHistory:Array.isArray(v.ftpHistory)?v.ftpHistory:[{date:new Date().toLocaleDateString('en-CA'),ftp:v.ftp}],plan:Array.isArray(v.plan)?v.plan:[],planSettings:v.planSettings||null,planControl:v.planControl&&typeof v.planControl==='object'?v.planControl:{paused:false,history:[]}};for(const session of updated.sessions){if(session.source==='Garmin FIT'&&session.date==='2026-10-31'&&session.type==='Vélo extérieur')session.type='Séance home trainer'};data=updated;$('ftp').value=data.ftp;save();pendingBackup=null;$('backupConfirm').classList.add('hidden');$('backupCancel').classList.add('hidden');$('importFile').value='';$('backupPreview').textContent='Sauvegarde restaurée : '+data.sessions.length+' activités et '+data.plan.length+' journées de calendrier.'}catch(err){alert('Impossible de restaurer : '+err.message)}}
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js', {updateViaCache:"none"}).catch(()=>{});render();nutrition();
+
+function recentLoad(){const now=Date.now();return data.sessions.filter(x=>{let d=new Date(x.date+'T12:00:00').getTime();return Number.isFinite(d)&&now-d>=0&&now-d<7*86400000}).reduce((a,x)=>a+x.duration*x.rpe,0)}
+function recommend(){
+const en=+$('coachEnergy').value, sl=+$('coachSleep').value, legs=$('coachLegs').value, health=$('coachHealth').value,goal=$('coachGoal').value,load=recentLoad();
+if(!Number.isFinite(sl)||sl<0||sl>16){alert('Vérifie le sommeil');return}
+let title,reason,blocks=null;
+if(health==='ill'){title='Repos';reason='Maladie ou fièvre : ne fais pas de séance structurée. Reprends progressivement après guérison.'}
+else if(legs==='pain'){title='Repos / évaluation';reason='Douleur inhabituelle : ne force pas. Si elle persiste ou s’aggrave, demande un avis médical.'}
+else if(health==='recovering'){title='Repos recommandé';reason='Convalescence : aucune séance n’est générée automatiquement. Reprise progressive après amélioration et en l’absence de signes préoccupants.'}
+else if(en<=2||sl<6||load>3500){title='Récupération 30 min';reason='Fatigue, sommeil insuffisant ou charge élevée : privilégie le repos ou une courte séance très facile.';blocks={warm:5,reps:1,work:20,workW:Math.round(data.ftp*.5),rest:0,restW:Math.round(data.ftp*.45),cool:5,cad:85}}
+else if(goal==='force'&&en>=4&&legs==='fresh'&&load<2500){title='Force en côte 65 min';reason='Travail contrôlé en basse cadence, sans douleur et avec récupération.';blocks={warm:15,reps:5,work:5,workW:Math.round(data.ftp*.8),rest:3,restW:Math.round(data.ftp*.5),cool:10,cad:60}}
+else if(goal==='tempo'&&en>=4&&legs==='fresh'&&load<2500){title='Tempo 70 min';reason='Deux blocs tempo, sous réserve de bonnes sensations à l’échauffement.';blocks={warm:15,reps:2,work:15,workW:Math.round(data.ftp*.83),rest:5,restW:Math.round(data.ftp*.55),cool:15,cad:88}}
+else if(goal==='recovery'||en===3||legs==='tired'){title='Endurance facile 50 min';reason='Séance allégée et sans intervalles difficiles.';blocks={warm:10,reps:1,work:30,workW:Math.round(data.ftp*.6),rest:0,restW:Math.round(data.ftp*.5),cool:10,cad:88}}
+else{title='Endurance Z2 80 min';reason='Endurance régulière, intensité modérée, avec vérification des sensations.';blocks={warm:10,reps:1,work:60,workW:Math.round(data.ftp*.67),rest:0,restW:Math.round(data.ftp*.5),cool:10,cad:88}}
+$('coachResult').innerHTML='<strong>'+esc(title)+'</strong><p>'+esc(reason)+'</p><small>Charge enregistrée sur 7 jours : '+Math.round(load)+' min × RPE (indicateur simplifié).</small>';
+if(blocks){$('workoutName').value=title;$('warmup').value=blocks.warm;$('repeats').value=blocks.reps;$('workMin').value=blocks.work;$('workW').value=blocks.workW;$('restMin').value=blocks.rest;$('restW').value=blocks.restW;$('cooldown').value=blocks.cool;$('cadence').value=blocks.cad;summary()}
+}
+function summary(){let total=(+$('warmup').value)+(+ $('cooldown').value)+(+ $('repeats').value)*((+$('workMin').value)+(+ $('restMin').value));$('workoutSummary').textContent='Durée totale : '+total+' minutes.'}
+['warmup','cooldown','repeats','workMin','restMin'].forEach(id=>$(id).addEventListener('input',summary));
+function exportZwo(){
+const num=id=>Number($(id).value),ftp=Number(data.ftp);
+const warm=num('warmup'),cool=num('cooldown'),rep=num('repeats'),wm=num('workMin'),ww=num('workW'),rm=num('restMin'),rw=num('restW'),cad=$('cadence').value?num('cadence'):null;
+if(![warm,cool,rep,wm,ww,rm,rw,ftp].every(Number.isFinite)||rep<1||rep>30||wm<1||wm>240||rm<0||rm>120||warm<0||warm>60||cool<0||cool>60||ww<30||ww>600||rw<30||rw>600||ftp<50||ftp>600||(cad!==null&&(cad<40||cad>130))){alert('Paramètres de séance invalides.');return}
+const name=$('workoutName').value.trim()||'BikingMan';
+const xml=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
+const power=w=>(w/ftp).toFixed(4),cadAttr=cad===null?'':' Cadence="'+cad+'"';
+let parts=[];
+if(warm>0)parts.push('<Warmup Duration="'+warm*60+'" PowerLow="'+power(Math.max(30,ww*.45))+'" PowerHigh="'+power(Math.max(30,ww*.7))+'"/>');
+for(let i=0;i<rep;i++){parts.push('<SteadyState Duration="'+wm*60+'" Power="'+power(ww)+'"'+cadAttr+'/>');if(rm>0&&i<rep-1)parts.push('<SteadyState Duration="'+rm*60+'" Power="'+power(rw)+'"/>')}
+if(cool>0)parts.push('<Cooldown Duration="'+cool*60+'" PowerLow="'+power(Math.max(30,ww*.65))+'" PowerHigh="'+power(Math.max(30,ww*.4))+'"/>');
+let content='<?xml version="1.0" encoding="UTF-8"?>\n<workout_file><author>BikingMan Performance</author><name>'+xml(name)+'</name><description>FTP '+ftp+' W. Séance créée dans BikingMan Performance.</description><sportType>bike</sportType><workout>'+parts.join('')+'</workout></workout_file>';
+const filename=name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_').slice(0,50)+'.zwo';
+if(window.AndroidBridge&&window.AndroidBridge.exportFile)window.AndroidBridge.exportFile(filename,'application/octet-stream',content);
+else{let blob=new Blob([content],{type:'application/xml'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+}
+summary();
+
+
+function renderDashboard(){
+ const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ const start=new Date(today);start.setDate(start.getDate()-6);
+ const valid=data.sessions.filter(x=>x.date&&Number.isFinite(new Date(x.date+'T12:00:00').getTime()));
+ const recent=valid.filter(x=>{const d=new Date(x.date+'T12:00:00');return d>=start&&d<new Date(today.getTime()+86400000)});
+ const mins=recent.reduce((a,x)=>a+(Number(x.duration)||0),0);
+ $('dashHours').textContent=(mins/60).toFixed(1).replace('.',',')+' h';
+ $('dashLoad').textContent=Math.round(recent.reduce((a,x)=>a+(Number(x.duration)||0)*(Number(x.rpe)||0),0));
+ $('dashCount').textContent=recent.length;
+ const latest=(data.checkins||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0];
+ $('dashRecovery').textContent=latest?latest.energy+'/5':'—';
+ $('dashNote').textContent=latest?'Dernier bilan : '+latest.date+' · '+latest.sleep+' h de sommeil · '+latest.health:'Aucun bilan de récupération pour le moment.';
+ const monday=new Date(today);monday.setDate(today.getDate()-(today.getDay()+6)%7);
+ const weeks=[];
+ for(let i=7;i>=0;i--){const d=new Date(monday);d.setDate(d.getDate()-7*i);const end=new Date(d);end.setDate(end.getDate()+7);const m=valid.filter(x=>{const dt=new Date(x.date+'T12:00:00');return dt>=d&&dt<end}).reduce((a,x)=>a+(Number(x.duration)||0),0);weeks.push({date:d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}),hours:m/60})}
+ const max=Math.max(1,...weeks.map(x=>x.hours));
+ $('weeklyBars').innerHTML=weeks.map(x=>'<div style="display:flex;align-items:center;gap:10px;margin:9px 0"><span style="width:46px;font-size:12px">'+x.date+'</span><div style="flex:1;background:#2d404a;border-radius:8px;height:16px;overflow:hidden"><div style="width:'+Math.round(x.hours/max*100)+'%;height:100%;background:#50e0b0"></div></div><span style="width:49px;text-align:right;font-size:12px">'+x.hours.toFixed(1)+' h</span></div>').join('');
+ $('ftpHistory').innerHTML=(data.ftpHistory||[]).slice(-8).reverse().map(x=>'<div class="entry">'+esc(x.date)+' · <strong>'+Number(x.ftp)+' W</strong></div>').join('')||'Aucun historique.';
+}
+
+function saveCoachCheckin(){
+  const sleep=Number($('coachSleep').value), energy=Number($('coachEnergy').value);
+  if(!Number.isFinite(sleep)||sleep<0||sleep>16||energy<1||energy>5){alert('Vérifie le sommeil et ton énergie.');return}
+  const date=new Date().toLocaleDateString('en-CA');
+  const entry={date,sleep,energy,legs:$('coachLegs').value,health:$('coachHealth').value,goal:$('coachGoal').value};
+  data.checkins=data.checkins.filter(x=>x.date!==date);
+  data.checkins.unshift(entry);
+  data.checkins.sort((a,b)=>b.date.localeCompare(a.date));
+  data.checkins=data.checkins.slice(0,365);
+  save();
+  $('checkinStatus').textContent='Bilan du '+date+' enregistré sur cet appareil.';
+}
+function renderCheckins(){
+ const target=$('checkinHistory');if(!target)return;
+ target.innerHTML=data.checkins.length?data.checkins.slice(0,14).map(x=>
+ '<div class="entry"><strong>'+esc(x.date)+'</strong> · Énergie '+x.energy+'/5 · '+x.sleep+' h de sommeil · '+esc(x.health)+'</div>').join(''):'Aucun bilan enregistré.';
+}
+const originalRender=render;
+render=function(){originalRender();renderCheckins();renderDashboard();renderPlan()};
+const latest=data.checkins[0];
+if(latest){$('coachEnergy').value=latest.energy;$('coachSleep').value=latest.sleep;$('coachLegs').value=latest.legs;$('coachHealth').value=latest.health;$('coachGoal').value=latest.goal}
+renderCheckins();renderDashboard();renderPlan();
+
+
+// V7.3: indicative multiweek plan. Stored in the same JSON backup as other data.
+const PLAN_TEMPLATES=[
+ {name:'Repos / mobilité douce',kind:'rest',minutes:0,pct:0,cad:'—'},
+ {name:'Endurance facile',kind:'easy',minutes:45,pct:.58,cad:'85–90'},
+ {name:'Endurance Z2',kind:'z2',minutes:60,pct:.66,cad:'85–90'},
+ {name:'Ascension simulation',kind:'climb',minutes:75,pct:.70,cad:'libre selon pente'},
+ {name:'Endurance longue',kind:'long',minutes:90,pct:.65,cad:'85–90'},
+ {name:'Tempo modéré',kind:'tempo',minutes:60,pct:.80,cad:'85–90'},
+ {name:'Récupération',kind:'recovery',minutes:30,pct:.50,cad:'souple'}
+];
+function localISO(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function getTodayCheckin(){const today=localISO(new Date());return data.checkins.find(c=>c.date===today)||null}
+function planSafety(){const c=getTodayCheckin();if(!c)return 'no-checkin';if(c.health!=='well'||c.legs==='pain')return 'rest';if(Number(c.energy)<=2||Number(c.sleep)<6)return 'rest';if(Number(c.energy)===3||c.legs==='tired')return 'easy';return 'ok'}
+function createPlan(){
+ const h=Number($('planHours').value),start=$('planStart').value;
+ if(!Number.isFinite(h)||h<2||h>16||!/^\d{4}-\d{2}-\d{2}$/.test(start)){alert('Choisis une date et un volume de 2 à 16 heures.');return}
+ if(data.plan.length&&!confirm('Remplacer le programme existant ? Les séances Garmin et les bilans ne seront pas modifiés.'))return;
+ const startDate=new Date(start+'T12:00:00');if(Number.isNaN(startDate.getTime()))return;
+ const weekday=(startDate.getDay()+6)%7;startDate.setDate(startDate.getDate()-weekday);
+ const pattern=[null,'easy','z2',null,'climb','recovery','long'];
+ const targets=[1,1.08,1.15,.65];const planned=[];
+ for(let w=0;w<4;w++){
+  const weekMinutes=Math.round(h*60*targets[w]);const weights={easy:.14,z2:.18,climb:.20,recovery:.09,long:.39};
+  for(let day=0;day<7;day++){
+   const date=new Date(startDate);date.setDate(date.getDate()+w*7+day);
+   const kind=pattern[day]||'rest';const tpl=PLAN_TEMPLATES.find(t=>t.kind===kind);
+   let mins=kind==='rest'?0:Math.round(weekMinutes*weights[kind]/5)*5;
+   if(w===0&&kind==='long')mins=Math.min(mins,Math.round(h*60*.39/5)*5);
+   planned.push({date:localISO(date),week:w+1,kind,name:tpl.name,minutes:mins,pct:tpl.pct,cad:tpl.cad,done:false});
+  }
+ }
+ data.plan=planned;data.planSettings={hours:h,start:localISO(startDate),ftp:data.ftp};data.planControl={paused:planSafety()==='rest',history:[],pausedAt:planSafety()==='rest'?localISO(new Date()):null};save();
+ $('planMessage').textContent='Programme de 4 semaines enregistré. Vérifie ton bilan chaque jour avant toute séance.';
+}
+function setPlanDone(date,done){const p=data.plan.find(x=>x.date===date);if(p){if(data.planControl?.paused&&done){alert('Programme suspendu : conserve cette journée en repos.');return}p.done=done;save()}}
+function pausePlan(){if(!data.plan.length){alert('Crée d’abord un programme.');return}data.planControl=data.planControl||{history:[]};data.planControl.paused=true;data.planControl.pausedAt=localISO(new Date());data.planControl.history=Array.isArray(data.planControl.history)?data.planControl.history:[];data.planControl.history.push({date:localISO(new Date()),event:'pause'});save()}
+function resumePlan(){if(!data.plan.length){alert('Aucun programme à reprendre.');return}if(!data.planControl?.paused){alert('Le programme n’est pas suspendu.');return}const safe=planSafety();if(safe!=='ok'&&safe!=='easy'){alert('Reprise non recommandée : bilan du jour absent, convalescence ou récupération insuffisante.');return}const start=$('resumeDate').value;const dt=new Date(start+'T12:00:00');if(!/^\d{4}-\d{2}-\d{2}$/.test(start)||Number.isNaN(dt.getTime())||start<localISO(new Date())){alert('Choisis une date de reprise à partir d’aujourd’hui.');return}if(!confirm('Replanifier les séances restantes à partir du '+start+' ? Les séances déjà réalisées seront conservées. La première semaine sera allégée.'))return;
+const remaining=data.plan.filter(p=>!p.done&&p.minutes>0);const old=data.plan.filter(p=>p.done);const fresh=[];let day=0;for(const p of remaining){const d=new Date(dt);d.setDate(d.getDate()+day);fresh.push({...p,date:localISO(d),week:Math.floor(day/7)+1,minutes:Math.max(15,Math.round(p.minutes*(day<7?.55:day<14?.75:1)/5)*5),adjusted:true});day+=day%7===5?2:1}data.plan=[...old,...fresh];data.planControl.paused=false;data.planControl.history.push({date:localISO(new Date()),event:'resume',start});data.planSettings={...data.planSettings,start};save()}
+
+// V7.5 — adaptation automatique conservatrice, uniquement après une activité Garmin.
+// Les séances terminées sont préservées et chaque activité ne déclenche qu'une adaptation.
+function adaptPlanFromGarmin(session){
+ if(!data.plan.length)return;
+ const ctrl=data.planControl||(data.planControl={paused:false,history:[]});
+ ctrl.history=Array.isArray(ctrl.history)?ctrl.history:[];
+ ctrl.adaptedIds=Array.isArray(ctrl.adaptedIds)?ctrl.adaptedIds:[];
+ const key=session.garminId||String(session.id);
+ if(ctrl.adaptedIds.includes(key))return;
+ ctrl.adaptedIds.push(key);
+ if(ctrl.paused){ctrl.history.push({date:localISO(new Date()),event:'activity-while-paused',activity:session.date,detail:'Programme conservé en pause'});return}
+ const today=localISO(new Date());
+ // Ne pas modifier un calendrier avec une activité ancienne ou future.
+ if(session.date<today||session.date>today){ctrl.history.push({date:today,event:'historical-import',activity:session.date,detail:'Aucun changement : activité hors du jour courant'});return}
+ const day=data.plan.find(p=>p.date===session.date&&!p.done&&p.minutes>0);
+ if(day){day.done=true;day.completedBy=key}
+ const np=Number(session.normalizedPower)||Number(session.watts)||0;
+ const ftp=Number(data.ftp)||196;
+ const intensity=np>0?np/ftp:0;
+ const load=(Number(session.duration)||0)/60*100*intensity*intensity;
+ const hard=load>=75||intensity>=.85||Number(session.duration)>=120;
+ const next=data.plan.filter(p=>p.date>session.date&&!p.done&&p.minutes>0).sort((a,b)=>a.date.localeCompare(b.date));
+ const changes=[];
+ if(hard){
+   // Jusqu'à 48 h d'allègement sans supprimer les repos existants ni ajouter du volume.
+   const cutoff=new Date(session.date+'T12:00:00');cutoff.setDate(cutoff.getDate()+2);
+   const limit=localISO(cutoff);
+   for(const p of next.filter(x=>x.date<=limit)){
+     if(p.kind==='recovery'||p.kind==='easy')continue;
+     p.originalMinutes??=p.minutes;p.originalKind??=p.kind;p.originalName??=p.name;
+     p.kind='recovery';p.name='Récupération (adaptation Garmin)';p.minutes=Math.min(30,Math.max(15,Math.round(p.minutes*.4/5)*5));p.pct=.50;p.cad='souple';p.adjusted=true;
+     changes.push(p.date);
+   }
+ }
+ ctrl.history.push({date:today,event:'auto-adapt',activity:session.date,activityId:key,load:Math.round(load),detail:hard?(changes.length?'Séances allégées : '+changes.join(', '):'Effort élevé, aucune séance à alléger dans les 48 h'):'Activité prise en compte, pas de modification nécessaire'});
+ ctrl.history=ctrl.history.slice(-100);
+}
+function renderAutoAdapt(){
+ const el=$('autoAdaptStatus');if(!el)return;
+ const ctrl=data.planControl||{};const h=Array.isArray(ctrl.history)?ctrl.history:[];
+ const recent=[...h].reverse().find(x=>['auto-adapt','activity-while-paused','historical-import'].includes(x.event));
+ el.textContent=ctrl.paused?'Programme suspendu : les imports Garmin ne modifient pas les séances.':recent?'Adaptation Garmin : '+recent.detail:'Adaptation Garmin : les nouvelles activités du jour seront prises en compte automatiquement. Les imports historiques ne modifieront pas ton calendrier.';
+}
+function renderPlan(){const el=$('planView');if(!el)return;
+ if(data.planSettings){$('planHours').value=data.planSettings.hours;$('planStart').value=data.planSettings.start}
+ else if(!$('planStart').value)$('planStart').value=localISO(new Date());
+ if(!data.plan.length){el.innerHTML='';$('planMessage').textContent='Aucun programme enregistré dans cette version. Tu peux restaurer une sauvegarde JSON contenant un programme.';if($('planPauseStatus'))$('planPauseStatus').textContent='Aucun programme créé.';return}
+ $('planMessage').textContent='Calendrier retrouvé : '+data.plan.length+' journées, '+new Set(data.plan.map(p=>p.week)).size+' semaines. '+(data.planControl?.paused?'Programme suspendu.':'Programme actif.')+' Les séances sont affichées ci-dessous.';
+ const today=localISO(new Date()),safety=planSafety();
+ if(!$('resumeDate').value)$('resumeDate').value=today;
+ const ctrl=data.planControl||{paused:false};$('planPauseStatus').textContent=ctrl.paused?'Programme suspendu depuis le '+(ctrl.pausedAt||'bilan précédent')+'. Aucune séance à rattraper.':'Programme actif. Si les symptômes persistent, suspends le programme.';
+ let out='';if(ctrl.paused)out+='<p class="notice"><strong>Programme en pause.</strong> Toutes les séances restantes sont prévisionnelles et ne doivent pas être réalisées avant reprise confirmée.</p>';
+ if(safety==='rest')out+='<p class="notice"><strong>Repos recommandé aujourd’hui.</strong> État de santé, fatigue ou sommeil insuffisant : ne réalise pas la séance planifiée.</p>';
+ else if(safety==='easy')out+='<p class="notice">Aujourd’hui, alléger la séance prévue ou privilégier le repos selon les sensations.</p>';
+ else if(safety==='no-checkin')out+='<p class="notice">Enregistre d’abord ton bilan du jour dans le Coach avant de suivre le programme.</p>';
+ for(let week=1;week<=Math.max(4,...data.plan.map(p=>p.week||1));week++){
+  out+='<details '+(week===1||data.plan.some(x=>x.week===week&&x.date===today)?'open':'')+'><summary style="padding:12px 0"><strong>Semaine '+week+(week===4?' · allégée':'')+'</strong></summary>';
+  for(const p of data.plan.filter(x=>x.week===week)){
+   const power=p.pct?Math.round(data.ftp*p.pct)+' W':'—';const todayMark=p.date===today?' <strong>· Aujourd’hui</strong>':'';
+   out+='<div class="entry"><label style="margin:0"><input type="checkbox" style="width:auto;margin-right:8px" '+(p.done?'checked':'')+' onchange="setPlanDone(\''+p.date+'\',this.checked)">'+esc(p.date)+todayMark+'</label><div><strong>'+esc(p.name)+'</strong> · '+p.minutes+' min · '+power+' · '+esc(p.cad)+' tr/min</div></div>';
+  }
+  out+='</details>';
+ }
+ el.innerHTML=out;renderAutoAdapt();
+}
+
+// Garmin FIT importer: FIT binary profile essentials; unknown fields are safely skipped.
+async function unzipFit(buffer){
+ const u=new Uint8Array(buffer),v=new DataView(buffer);
+ let eocd=-1;for(let i=u.length-22;i>=Math.max(0,u.length-65557);i--){if(v.getUint32(i,true)===0x06054b50){eocd=i;break}}
+ if(eocd<0)throw Error('Archive ZIP invalide');
+ let p=v.getUint32(eocd+16,true),count=v.getUint16(eocd+10,true);
+ for(let j=0;j<count;j++){
+  if(p+46>u.length||v.getUint32(p,true)!==0x02014b50)throw Error('Répertoire ZIP invalide');
+  const method=v.getUint16(p+10,true),packed=v.getUint32(p+20,true),nameLen=v.getUint16(p+28,true),extraLen=v.getUint16(p+30,true),commentLen=v.getUint16(p+32,true),offset=v.getUint32(p+42,true);
+  const name=new TextDecoder().decode(u.slice(p+46,p+46+nameLen));p+=46+nameLen+extraLen+commentLen;
+  if(!name.toLowerCase().endsWith('.fit'))continue;
+  if(offset+30>u.length||v.getUint32(offset,true)!==0x04034b50)throw Error('Entrée ZIP invalide');
+  const start=offset+30+v.getUint16(offset+26,true)+v.getUint16(offset+28,true);
+  if(start+packed>u.length)throw Error('Archive ZIP tronquée');
+  const part=u.slice(start,start+packed);
+  if(method===0)return part.buffer;
+  if(method===8){if(typeof DecompressionStream==='undefined')throw Error('Décompresse le ZIP sous Windows puis importe le FIT.');return await new Response(new Blob([part]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer()}
+  throw Error('Compression ZIP non prise en charge');
+ }
+ throw Error('Aucun fichier FIT trouvé dans le ZIP');
+}
+
+function parseGarminFit(buffer){
+ const b=new DataView(buffer),u=new Uint8Array(buffer);if(b.byteLength<16)throw Error('Fichier FIT trop court');
+ const header=u[0],length=b.getUint32(4,true);if(header<12||header+length>b.byteLength||String.fromCharCode(...u.slice(8,12))!=='.FIT')throw Error('Fichier FIT invalide');
+ const defs={},end=header+length;let pos=header;const sessions=[],laps=[],records=[];let fileId=null;
+ function value(offset,size,type,little){
+  const t=type&31;if(offset+size>b.byteLength)return null;
+  if(t===7)return new TextDecoder().decode(u.slice(offset,offset+size)).replace(/\0.*$/,'');
+  if(t===0||t===2||t===10||t===13){const n=b.getUint8(offset);return n===255?null:n}
+  if(t===1){const n=b.getInt8(offset);return n===127?null:n}
+  if(t===3){if(size<2)return null;const n=b.getInt16(offset,little);return n===32767?null:n}
+  if(t===4){if(size<2)return null;const n=b.getUint16(offset,little);return n===65535?null:n}
+  if(t===5){if(size<4)return null;const n=b.getInt32(offset,little);return n===2147483647?null:n}
+  if(t===6||t===12){if(size<4)return null;const n=b.getUint32(offset,little);return n===4294967295?null:n}
+  if(t===8&&size>=4){const n=b.getFloat32(offset,little);return Number.isFinite(n)?n:null}
+  if(t===9&&size>=8){const n=b.getFloat64(offset,little);return Number.isFinite(n)?n:null}
+  return null;
+ }
+ while(pos<end){const h=u[pos++],local=(h>>5)&3;
+  if(h&128){const def=defs[local];if(!def)throw Error('Définition FIT manquante');const f={};for(const x of def.fields){if(pos+x.size>end)throw Error('FIT tronqué');f[x.num]=value(pos,x.size,x.type,def.little);pos+=x.size}if(def.dev)for(const x of def.dev){if(pos+x.size>end)throw Error('FIT tronqué');pos+=x.size}if(def.global===18)sessions.push(f);else if(def.global===19)laps.push(f);else if(def.global===20)records.push(f);continue}
+  if(h&64){if(pos+5>end)throw Error('Définition FIT tronquée');pos++;const arch=u[pos++],little=arch===0,global=b.getUint16(pos,little);pos+=2;const count=u[pos++],fields=[];for(let i=0;i<count;i++){if(pos+3>end)throw Error('Définition FIT tronquée');fields.push({num:u[pos],size:u[pos+1],type:u[pos+2]});pos+=3}let dev=[];if(h&32){const n=u[pos++];for(let i=0;i<n;i++){dev.push({num:u[pos],size:u[pos+1]});pos+=3}}defs[h&15]={global,little,fields,dev};continue}
+  const def=defs[h&15];if(!def)throw Error('Définition FIT manquante');const f={};for(const x of def.fields){if(pos+x.size>end)throw Error('FIT tronqué');f[x.num]=value(pos,x.size,x.type,def.little);pos+=x.size}for(const x of def.dev){if(pos+x.size>end)throw Error('FIT tronqué');pos+=x.size}if(def.global===18)sessions.push(f);else if(def.global===19)laps.push(f);else if(def.global===20)records.push(f);else if(def.global===0)fileId=f;
+ }
+ if(!sessions.length)throw Error('Aucune session FIT trouvée');
+ const sess=sessions.reduce((a,x)=>!a||Number(x[8]||0)>Number(a[8]||0)?x:a,null);
+ const fitEpoch=Date.UTC(1989,11,31)/1000;
+ const time=sess[2]??sess[253]??fileId?.[4];const date=time!=null?new Date((time+fitEpoch)*1000).toISOString().slice(0,10):new Date().toLocaleDateString('en-CA');
+ const total=(sess[8]??sess[7]??0)/1000;
+ const ascent=sess[22]??laps.reduce((a,x)=>a+Number(x[21]||0),0);
+ const sport=sess[5],subSport=sess[6];const type=sport===1?'Course à pied':([6,58].includes(subSport)?'Séance home trainer':'Vélo extérieur');
+ const avgPower=sess[20]??null,normalizedPower=sess[34]??null;
+ return {date,duration:Math.round(total/60),distance:sess[9]!=null?Math.round(sess[9]/10000)/10:null,elevation:ascent??null,watts:avgPower,normalizedPower,heartRate:sess[16]??null,cadence:sess[18]??null,type,fitTime:time,recordCount:records.length,intervals:detectIntervals(records,data.ftp),powerTrace:buildPowerTrace(records)};
+}
+
+// FIT record fields: 253 timestamp (s since FIT epoch), 7 power (W), 4 cadence (rpm).
+// Aggregate into 30s bins to avoid interpreting single-second spikes as intervals.
+function detectIntervals(records,ftp){
+ const points=records.filter(r=>Number.isFinite(r[253])&&Number.isFinite(r[7])&&r[7]>=0&&r[7]<2000)
+   .map(r=>({t:r[253],w:r[7],c:Number.isFinite(r[4])?r[4]:null})).sort((a,b)=>a.t-b.t);
+ if(points.length<30)return [];
+ const start=points[0].t;let bins=new Map();
+ for(const x of points){const key=Math.floor((x.t-start)/30);if(!bins.has(key))bins.set(key,[]);bins.get(key).push(x)}
+ const classify=(w,c)=>c!=null&&c<=65&&w>=ftp*.6?'Force basse cadence':w>=ftp*.9?'Effort soutenu':w<=ftp*.6?'Récupération':'Endurance / tempo';
+ const segments=[];let current=null;
+ for(const [key,items] of [...bins].sort((a,b)=>a[0]-b[0])){
+  if(items.length<8)continue;
+  const w=items.reduce((n,x)=>n+x.w,0)/items.length;
+  const cs=items.filter(x=>x.c!=null);const c=cs.length?cs.reduce((n,x)=>n+x.c,0)/cs.length:null;
+  const kind=classify(w,c);const minute=Math.round(key*.5*10)/10;
+  if(current&&current.kind===kind&&key===current.lastKey+1){current.lastKey=key;current.bins++;current.sumW+=w;current.sumC+=c??0;current.cCount+=c==null?0:1}
+  else {if(current)segments.push(current);current={kind,startMin:minute,lastKey:key,bins:1,sumW:w,sumC:c??0,cCount:c==null?0:1}}
+ }
+ if(current)segments.push(current);
+ return segments.filter(x=>x.bins>=2).slice(0,100).map(x=>({kind:x.kind,startMin:x.startMin,durationMin:x.bins*.5,avgPower:Math.round(x.sumW/x.bins),avgCadence:x.cCount?Math.round(x.sumC/x.cCount):null}));
+}
+function powerZone(w,ftp){const r=w/ftp;return r<=.55?0:r<=.75?1:r<=.90?2:r<=1.05?3:r<=1.20?4:r<=1.50?5:6}
+function fmtMinutes(m){return m>=60?(m/60).toFixed(1).replace('.',',')+' h':Math.round(m)+' min'}
+function trainingAnalysis(s){
+ const ftp=Number(s.ftpAtImport)||Number(data.ftp)||196;
+ const source=Array.isArray(s.powerTrace)&&s.powerTrace.length?s.powerTrace:(Array.isArray(s.intervals)?s.intervals.map(x=>({t:Number(x.startMin),duration:Number(x.durationMin),w:Number(x.avgPower),c:x.avgCadence==null?null:Number(x.avgCadence)})):[]);
+ const bins=Array.from({length:7},()=>0);let covered=0,low=0,highLow=0;
+ for(const x of source){const duration=Number(x.duration??.5);if(!(duration>0&&Number.isFinite(x.w)))continue;covered+=duration;bins[powerZone(x.w,ftp)]+=duration;if(x.c!=null&&x.c>=50&&x.c<=65){low+=duration;if(x.w>=ftp*.6)highLow+=duration}}
+ const np=Number(s.normalizedPower),dur=Number(s.duration),ifactor=np>0?np/ftp:null;
+ const tss=ifactor&&dur>0?dur/60*ifactor*ifactor*100:null;
+ return {ftp,source,bins,covered,low,highLow,ifactor,tss,complete:!!(s.powerTrace&&s.powerTrace.length)};
+}
+function performanceChart(s,a){
+ const pts=a.source;if(!pts.length)return '<p class="muted">Pas de points détaillés disponibles.</p>';
+ const W=680,H=250,L=42,R=48,T=20,B=37;const duration=Math.max(Number(s.duration)||0,...pts.map(x=>x.t+(x.duration||.5)),1);
+ const maxW=Math.max(a.ftp*1.25,...pts.map(x=>x.w),50)*1.1;const maxC=Math.max(110,...pts.map(x=>x.c||0))*1.05;
+ const xPos=t=>L+(W-L-R)*t/duration, yw=w=>H-B-(H-B-T)*w/maxW,yc=c=>H-B-(H-B-T)*c/maxC;
+ const power=pts.map(x=>x.w==null?null:`${xPos(x.t).toFixed(1)},${yw(x.w).toFixed(1)}`).filter(Boolean).join(' ');
+ const cad=pts.filter(q=>q.c!=null).map(q=>`${xPos(q.t).toFixed(1)},${yc(q.c).toFixed(1)}`).join(' ');
+ let grid='';for(let i=0;i<=4;i++){const y=T+(H-B-T)*i/4;grid+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#304853"/><text x="4" y="${y+4}" fill="#a8c2cb" font-size="11">${Math.round(maxW*(4-i)/4)} W</text>`}
+ return `<div style="overflow-x:auto"><svg role="img" aria-label="Courbes approximatives de puissance et de cadence" viewBox="0 0 ${W} ${H}" style="width:100%;min-width:390px;background:#0c1a23;border-radius:12px">${grid}<polyline points="${power}" fill="none" stroke="#50e0b0" stroke-width="2.3" stroke-linejoin="round"/><polyline points="${cad}" fill="none" stroke="#ffbd69" stroke-width="2" stroke-linejoin="round"/><text x="${L}" y="${H-9}" fill="#b5c8d0" font-size="12">0 min</text><text x="${W-R-55}" y="${H-9}" fill="#b5c8d0" font-size="12">${Math.round(duration)} min</text><text x="${W-42}" y="${T+9}" fill="#ffbd69" font-size="11">${Math.round(maxC)}</text><text x="${W-42}" y="${H-B}" fill="#ffbd69" font-size="11">0</text></svg></div><div style="font-size:12px;margin:7px 0;color:#c8d7dc"><span style="color:#50e0b0">●</span> Puissance (W) · <span style="color:#ffbd69">●</span> Cadence (tr/min, axe droit)</div>`;
+}
+function intervalHtml(s){
+ const a=trainingAnalysis(s);const coverage=a.covered>0?Math.round(100*a.covered/Math.max(s.duration,1)):0;
+ const bars=a.bins.map((m,i)=>`<div style="display:flex;align-items:center;gap:8px;margin:6px 0"><span style="width:24px">Z${i+1}</span><div style="height:12px;background:#29404c;flex:1;border-radius:6px"><div style="width:${a.covered?m/a.covered*100:0}%;height:100%;background:#50e0b0;border-radius:6px"></div></div><span style="min-width:55px;text-align:right">${m.toFixed(1)} min</span></div>`).join('');
+ const mode=sessionModeLabel(s.sessionMode);
+ return `<p class="muted">Mode : ${esc(mode)} · FTP utilisée : ${a.ftp} W. Une cadence basse en simulation n'est pas automatiquement un exercice de force.</p>`+
+ (a.ifactor?`<div class="grid"><div><strong>IF : ${a.ifactor.toFixed(2)}</strong><br><small>NP / FTP</small></div><div><strong>TSS estimé : ${Math.round(a.tss)}</strong><br><small>À confirmer avec les données Garmin</small></div></div>`:'<p class="muted">IF et TSS non calculables : NP absente.</p>')+
+ `<h3 style="margin-top:15px">Puissance et cadence</h3>${performanceChart(s,a)}<h3>Temps par zone de puissance</h3>${bars}<p class="muted">Couverture des données : ${a.covered.toFixed(1)} min sur ${s.duration} min (${coverage} %). ${a.complete?'Courbe issue des blocs de 30 s du fichier FIT.':'Ancienne activité : graphique reconstruit uniquement à partir des intervalles détectés et conservés ; les transitions courtes sont absentes. Les temps par zone sont donc incomplets.'}</p><div class="entry"><strong>Cadence de 50–65 tr/min : ${fmtMinutes(a.low)}</strong><br><span class="muted">Dont ${fmtMinutes(a.highLow)} à ≥ 60 % FTP ; temps mesuré sur les données disponibles, pas une preuve de force volontaire.</span></div>`+
+ '<details><summary>Voir les intervalles détectés</summary>'+(Array.isArray(s.intervals)?s.intervals:[]).map(x=>'<div class="entry">'+esc(x.kind)+' · '+x.startMin+'–'+(x.startMin+x.durationMin).toFixed(1)+' min · '+x.avgPower+' W'+(x.avgCadence!=null?' · '+x.avgCadence+' tr/min':'')+'</div>').join('')+'</details>';
+}
+function buildPowerTrace(records){
+ const points=records.filter(r=>Number.isFinite(r[253])&&Number.isFinite(r[7])&&r[7]>=0&&r[7]<2000).map(r=>({t:r[253],w:r[7],c:Number.isFinite(r[4])?r[4]:null})).sort((a,b)=>a.t-b.t);
+ if(!points.length)return [];
+ const start=points[0].t,bins=new Map();for(const q of points){const key=Math.floor((q.t-start)/30);if(!bins.has(key))bins.set(key,[]);bins.get(key).push(q)}
+ return [...bins].sort((a,b)=>a[0]-b[0]).slice(0,3000).map(([key,items])=>{const cs=items.filter(z=>z.c!=null);return {t:key*.5,duration:Math.min(.5,items.length/60),w:Math.round(items.reduce((a,z)=>a+z.w,0)/items.length),c:cs.length?Math.round(cs.reduce((a,z)=>a+z.c,0)/cs.length):null}});
+}
+
+async function importGarminFit(){
+ const f=$('fitInput').files[0],target=$('fitResult');if(!f){target.textContent='Sélectionne un fichier FIT ou ZIP.';return}
+ try{
+  if(f.size>40*1024*1024)throw Error('Fichier trop volumineux (limite 40 Mo)');
+  let buffer=await f.arrayBuffer();if(f.name.toLowerCase().endsWith('.zip'))buffer=await unzipFit(buffer);
+  const r=parseGarminFit(buffer);if(!r.duration||r.duration<1||r.duration>10000)throw Error('Durée de session non exploitable');
+  const id='garmin-'+(r.fitTime??f.name);if(data.sessions.some(x=>x.garminId===id))throw Error('Cette activité Garmin a déjà été importée.');
+  const message='Activité du '+r.date+' : '+r.duration+' min'+(r.distance!=null?', '+r.distance+' km':'')+(r.elevation!=null?', '+r.elevation+' m D+':'')+(r.watts!=null?', '+r.watts+' W moyens':'')+'. Intervalles détectés : '+r.intervals.length+'.\n\nImporter dans le journal avec RPE 4 (modifiable ultérieurement par suppression et nouvelle saisie) ?';
+  if(!confirm(message)){target.textContent='Import annulé : '+message.split('\n')[0];return}
+  data.sessions.unshift({id:Date.now(),garminId:id,date:r.date,type:r.type,duration:r.duration,watts:r.watts,rpe:4,notes:'Import Garmin Connect · FC moy. '+(r.heartRate??'—')+' bpm · Cadence '+(r.cadence??'—')+' tr/min · NP '+(r.normalizedPower??'—')+' W',distance:r.distance,elevation:r.elevation,normalizedPower:r.normalizedPower,heartRate:r.heartRate,cadence:r.cadence,sessionMode:"",intervals:r.intervals,powerTrace:r.powerTrace,ftpAtImport:data.ftp,source:'Garmin FIT'});
+  adaptPlanFromGarmin(data.sessions[0]);save();target.textContent='Activité Garmin importée avec succès. Vérifie ton tableau de bord et ajuste ton RPE si nécessaire.';
+ }catch(err){target.textContent='Import impossible : '+err.message}
+}
+
+// V7.6: preview-only scenario. No data writes, no calls to save(), no activity creation.
+function simulatePlan(){
+ const target=$('simResult');
+ const duration=Number($('simMinutes').value),np=Number($('simNP').value),ftp=Number(data.ftp)||196;
+ if(!Number.isFinite(duration)||duration<10||duration>600||!Number.isFinite(np)||np<30||np>500){target.textContent='Entre une durée de 10 à 600 min et une NP de 30 à 500 W.';return}
+ if(!Array.isArray(data.plan)||!data.plan.length){target.textContent='Crée d’abord un programme pour visualiser les adaptations.';return}
+ const state=$('simPause').value;
+ const paused=state==='paused'||(state==='current'&&!!data.planControl?.paused);
+ const today=localISO(new Date());
+ const intensity=np/ftp,load=duration/60*100*intensity*intensity;
+ const hard=load>=75||intensity>=.85||duration>=120;
+ const plan=data.plan.map(x=>({...x}));
+ const changes=[];
+ if(!paused&&hard){
+  const cutoff=new Date(today+'T12:00:00');cutoff.setDate(cutoff.getDate()+2);
+  const limit=localISO(cutoff);
+  for(const p of plan.filter(x=>x.date>today&&x.date<=limit&&!x.done&&x.minutes>0&&x.kind!=='recovery'&&x.kind!=='easy')){
+   const before=p.name+' ('+p.minutes+' min)';
+   p.kind='recovery';p.name='Récupération (simulation)';p.minutes=Math.min(30,Math.max(15,Math.round(p.minutes*.4/5)*5));
+   changes.push({date:p.date,before,after:p.name+' ('+p.minutes+' min)'});
+  }
+ }
+ const fmt=n=>Number(n).toFixed(1).replace('.',',');
+ let html='<strong>Simulation uniquement — aucune donnée modifiée.</strong><div>IF estimé : '+fmt(intensity)+' · TSS estimé : '+Math.round(load)+'</div>';
+ if(paused)html+='<p>Programme suspendu : aucune modification simulée. Le repos reste prioritaire.</p>';
+ else if(!hard)html+='<p>Charge sous les seuils d’adaptation : aucun allègement déclenché.</p>';
+ else if(!changes.length)html+='<p>Effort élevé, mais aucune séance admissible à alléger dans les 48 heures suivant aujourd’hui.</p>';
+ else html+='<p><strong>Adaptations proposées sur la copie :</strong></p>'+changes.map(c=>'<div class="entry">'+esc(c.date)+' : '+esc(c.before)+' → '+esc(c.after)+'</div>').join('');
+ html+='<small>Simulation indicative : le coach réel ne remplace pas un avis médical. Aucune reprise automatique.</small>';
+ target.innerHTML=html;
+}
+</script></body></html>

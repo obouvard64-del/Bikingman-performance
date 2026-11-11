@@ -1,0 +1,18 @@
+BikingMan Performance – Android PWA V7.8.3
+
+Cette version utilise le code V7.8.2 transmis par l’utilisateur et ajoute le service worker hors connexion.
+
+IMPORTANT : ouvrir index.html directement depuis un fichier ZIP ou le stockage du téléphone ne suffit PAS à installer une PWA. L’application doit être publiée sur une adresse HTTPS (ou testée sur localhost).
+
+1. Décompresser cette archive.
+2. Publier tous les fichiers ensemble, à la racine d’un site HTTPS statique (par exemple GitHub Pages ou Netlify).
+3. Ouvrir l’adresse HTTPS sur Android dans Chrome.
+4. Menu ⋮ → Installer l’application (ou Ajouter à l’écran d’accueil).
+5. Ouvrir une fois l’application avec Internet pour mettre en cache les fichiers.
+6. Tester ensuite en mode avion.
+
+Les données restent dans le stockage local du navigateur de chaque appareil. Il n’existe PAS encore de synchronisation PC/Android, ni de connexion Garmin automatique. Les données de la version PC ne sont PAS transférées automatiquement sur Android : exporter une sauvegarde JSON sur le PC et la restaurer sur Android si nécessaire.
+
+Sauvegarder les données avant toute modification ou changement d’adresse. La mise à jour des fichiers sur le site HTTPS permet une nouvelle version à la prochaine connexion ; selon le cache et les onglets ouverts, un redémarrage peut être nécessaire.
+
+La V7.8.3 n’est pas un APK.
