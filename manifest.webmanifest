@@ -19,7 +19,5 @@
       "type": "image/png",
       "purpose": "any"
     }
-  ],
-  "id": "./index.html",
-  "orientation": "any"
+  ]
 }

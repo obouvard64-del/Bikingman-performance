@@ -1,0 +1,13 @@
+BikingMan Performance V7.9.0 — Synchronisation Supabase
+
+1. Dans Supabase > SQL Editor, exécuter le fichier supabase_migration.sql UNE SEULE FOIS.
+2. Conserver une sauvegarde JSON depuis chaque appareil.
+3. Publier les fichiers web sur GitHub Pages (pas le fichier SQL).
+4. Sur le PC, ouvrir Réglages, créer le compte e-mail, confirmer l’e-mail, se connecter.
+5. Sur le PC, choisir « Envoyer les données locales vers le cloud » (cloud vide).
+6. Sur Android, mettre à jour la PWA, se connecter au MÊME compte, choisir « Récupérer les données du cloud ».
+7. La synchronisation s’effectue ensuite à la reprise de l’application et environ toutes les 20 secondes pendant son utilisation.
+8. En cas de conflit, ne pas écraser les données : exporter les JSON des deux appareils pour rapprochement.
+
+ATTENTION : le modèle est un document JSON unique ; pas de fusion automatique des modifications simultanées.
+Les sessions restent stockées localement dans le navigateur pour conserver le fonctionnement hors ligne.
